@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doctor dashboard of LifeLine Hospital">
+  <title>Doctor Dashboard | LifeLine Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">Life<span>Line</span> Hospital</a>
+    <div class="user-info">
+      <span class="badge doctor">Doctor</span>
+      <span>Welcome, Dr. Sadia Akter</span>
+      <a href="index.html" class="btn btn-small btn-light">Logout</a>
+    </div>
+  </header>
+
+  <nav class="topnav">
+    <button type="button" id="nav-prescriptionSection" onclick="showSection('prescriptionSection')">Prescriptions</button>
+    <button type="button" id="nav-queueSection" onclick="showSection('queueSection')">Patient Queue</button>
+    <button type="button" id="nav-historySection" onclick="showSection('historySection')">Patient History</button>
+    <button type="button" id="nav-scheduleSection" onclick="showSection('scheduleSection')">My Schedule</button>
+  </nav>
+
+  <main class="container">
+
+    <section id="prescriptionSection" class="page-section">
+      <h2 class="page-title">Prescriptions</h2>
+      <p class="page-subtitle">Write, edit, delete and search prescriptions.</p>
+
+      <div id="rxMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3 id="rxFormTitle">New Prescription</h3>
+            <form id="prescriptionForm" onsubmit="return savePrescription()">
+              <fieldset>
+                <legend>Prescription Details</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="rxPatient">Patient:</label></td>
+                    <td>
+                      <select id="rxPatient"></select>
+                      <span class="error" id="rxPatientError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="rxDate">Date:</label></td>
+                    <td>
+                      <input type="date" id="rxDate">
+                      <span class="error" id="rxDateError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="rxDiagnosis">Diagnosis:</label></td>
+                    <td>
+                      <input type="text" id="rxDiagnosis" placeholder="e.g. Viral fever">
+                      <span class="error" id="rxDiagnosisError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="rxMedicine">Medicine:</label></td>
+                    <td>
+                      <input type="text" id="rxMedicine" placeholder="e.g. Paracetamol 500mg">
+                      <span class="error" id="rxMedicineError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Take:</td>
+                    <td>
+                      <input type="checkbox" id="rxMorning" name="rxTiming" value="Morning">
+                      <label for="rxMorning" class="option-label">Morning</label>
+                      <input type="checkbox" id="rxNoon" name="rxTiming" value="Noon">
+                      <label for="rxNoon" class="option-label">Noon</label>
+                      <input type="checkbox" id="rxNight" name="rxTiming" value="Night">
+                      <label for="rxNight" class="option-label">Night</label>
+                      <span class="error" id="rxTimingError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="rxDays">Days:</label></td>
+                    <td>
+                      <input type="number" id="rxDays" placeholder="1 to 30">
+                      <span class="error" id="rxDaysError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="rxAdvice">Advice:</label></td>
+                    <td>
+                      <textarea id="rxAdvice" rows="3" cols="30" placeholder="Optional advice"></textarea>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" id="rxSaveButton" class="btn" value="Save Prescription">
+              <button type="button" class="btn btn-secondary" onclick="resetPrescriptionForm()">Cancel</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-wide">
+          <div class="card">
+            <h3>All prescriptions</h3>
+            <div class="search-bar">
+              <input type="text" id="prescriptionSearch" placeholder="Search by patient, diagnosis, medicine or id..." onkeyup="renderPrescriptions()">
+            </div>
+            <p class="hint" id="rxCount"></p>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr><th>ID</th><th>Patient</th><th>Diagnosis</th><th>Medicine</th><th>Days</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="prescriptionBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="queueSection" class="page-section">
+      <h2 class="page-title">Patient Queue</h2>
+      <p class="page-subtitle">Today's patients. Call the next one when you are ready.</p>
+
+      <div class="card">
+        <div id="nowCalling" class="now-calling"></div>
+        <button type="button" class="btn btn-success" onclick="callNextPatient()">Call Next Patient</button>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Token</th><th>Patient</th><th>Problem</th><th>Status</th></tr>
+            </thead>
+            <tbody id="queueBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="historySection" class="page-section">
+      <h2 class="page-title">Patient History</h2>
+      <p class="page-subtitle">See the past visits of a patient.</p>
+
+      <div class="card">
+        <fieldset>
+          <legend>Choose a patient</legend>
+          <select id="historyPatient"></select>
+          <span class="error" id="historyPatientError"></span>
+        </fieldset>
+        <button type="button" class="btn" onclick="showHistory()">Show History</button>
+        <h3 id="historyTitle"></h3>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Date</th><th>Diagnosis</th><th>Treatment</th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="scheduleSection" class="page-section">
+      <h2 class="page-title">My Schedule</h2>
+      <p class="page-subtitle">Choose the days and hours you see patients.</p>
+
+      <div id="scheduleMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3>Set schedule</h3>
+            <form id="scheduleForm" onsubmit="return saveSchedule()">
+              <fieldset>
+                <legend>Visiting days</legend>
+                <input type="checkbox" id="daySat" name="day" value="Sat">
+                <label for="daySat" class="option-label">Sat</label>
+                <input type="checkbox" id="daySun" name="day" value="Sun">
+                <label for="daySun" class="option-label">Sun</label>
+                <input type="checkbox" id="dayMon" name="day" value="Mon">
+                <label for="dayMon" class="option-label">Mon</label>
+                <input type="checkbox" id="dayTue" name="day" value="Tue">
+                <label for="dayTue" class="option-label">Tue</label>
+                <input type="checkbox" id="dayWed" name="day" value="Wed">
+                <label for="dayWed" class="option-label">Wed</label>
+                <input type="checkbox" id="dayThu" name="day" value="Thu">
+                <label for="dayThu" class="option-label">Thu</label>
+                <span class="error" id="dayError"></span>
+              </fieldset>
+              <fieldset>
+                <legend>Visiting hours</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="startTime">From:</label></td>
+                    <td>
+                      <input type="time" id="startTime">
+                      <span class="error" id="startTimeError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="endTime">To:</label></td>
+                    <td>
+                      <input type="time" id="endTime">
+                      <span class="error" id="endTimeError"></span>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" class="btn" value="Save Schedule">
+            </form>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <h3>Saved schedule</h3>
+            <div id="scheduleSummary"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 LifeLine Hospital
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/doctor.js"></script>
+</body>
+</html>
