@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LifeLine — Hospital Management System with Admin, Doctor, Patient, and Receptionist dashboards.">
+  <meta property="og:title" content="LifeLine — Hospital Management System">
+  <meta property="og:description" content="LifeLine — Hospital Management System with Admin, Doctor, Patient, and Receptionist dashboards.">
+  <title>Home | LifeLine Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">Life<span>Line</span> Hospital</a>
+    <div class="user-info">
+      <a href="login.html" class="btn btn-small btn-light">Login</a>
+      <a href="register.html" class="btn btn-small">Register</a>
+    </div>
+  </header>
+
+  <nav class="topnav">
+    <a href="index.html">Home</a>
+    <a href="#search">Find a Doctor</a>
+    <a href="#departments">Departments</a>
+    <a href="#contact">Contact Us</a>
+  </nav>
+
+  <main class="container">
+
+    <section class="hero">
+      <h1>Caring for you, every hour</h1>
+      <p>Book appointments, meet our doctors and manage your health at LifeLine Hospital.</p>
+      <a href="register.html" class="btn btn-light">Create an account</a>
+    </section>
+
+    <section id="search">
+      <h2 class="page-title">Find a Doctor</h2>
+      <p class="page-subtitle">Search by doctor name or choose a department.</p>
+
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" id="doctorSearch" placeholder="Search doctor name..." onkeyup="renderDoctors()">
+          <select id="doctorDepartment" onchange="renderDoctors()">
+            <option value="All">All departments</option>
+            <option value="Cardiology">Cardiology</option>
+            <option value="Medicine">Medicine</option>
+            <option value="Gynecology">Gynecology</option>
+            <option value="Pediatrics">Pediatrics</option>
+            <option value="Orthopedics">Orthopedics</option>
+          </select>
+        </div>
+        <p class="hint" id="doctorCount"></p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Doctor</th><th>Department</th><th>Visiting Days</th><th>Fee</th></tr>
+            </thead>
+            <tbody id="doctorBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="departments">
+      <h2 class="page-title">Our Departments</h2>
+      <p class="page-subtitle">Specialist care under one roof.</p>
+      <div class="dept-grid">
+        <div class="dept-card"><h3>Cardiology</h3><p>Heart care, ECG and blood pressure.</p></div>
+        <div class="dept-card"><h3>Medicine</h3><p>Fever, diabetes and general illness.</p></div>
+        <div class="dept-card"><h3>Gynecology</h3><p>Women's health and pregnancy care.</p></div>
+        <div class="dept-card"><h3>Pediatrics</h3><p>Care for babies and children.</p></div>
+        <div class="dept-card"><h3>Orthopedics</h3><p>Bones, joints and sports injuries.</p></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="page-title">Contact Us</h2>
+      <div class="card">
+        <p>Address: 12 Green Road, Dhaka</p>
+        <p>Phone: 01700-000000</p>
+        <p>Emergency: 16000 (24 hours)</p>
+        <p>Email: info@lifeline.com</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 LifeLine Hospital
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
