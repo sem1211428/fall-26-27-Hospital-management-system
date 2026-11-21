@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin dashboard of LifeLine Hospital">
+  <title>Admin Dashboard | LifeLine Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">Life<span>Line</span> Hospital</a>
+    <div class="user-info">
+      <span class="badge admin">Admin</span>
+      <span>Welcome, Rifat Hasan</span>
+      <a href="index.html" class="btn btn-small btn-light">Logout</a>
+    </div>
+  </header>
+
+  <nav class="topnav">
+    <button type="button" id="nav-usersSection" onclick="showSection('usersSection')">Manage Users</button>
+    <button type="button" id="nav-statsSection" onclick="showSection('statsSection'); renderStats()">Statistics Report</button>
+    <button type="button" id="nav-feesSection" onclick="showSection('feesSection')">Hospital Fees</button>
+    <button type="button" id="nav-noticeSection" onclick="showSection('noticeSection')">Notice Board</button>
+  </nav>
+
+  <main class="container">
+
+    <section id="usersSection" class="page-section">
+      <h2 class="page-title">Manage Users</h2>
+      <p class="page-subtitle">Add, edit, delete, search and approve accounts of every role.</p>
+
+      <div id="userMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3 id="userFormTitle">Add New User</h3>
+            <form id="userForm" onsubmit="return saveUser()">
+              <fieldset>
+                <legend>User Details</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="userName">Full name:</label></td>
+                    <td>
+                      <input type="text" id="userName" placeholder="Full name">
+                      <span class="error" id="userNameError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="userUsername">Username:</label></td>
+                    <td>
+                      <input type="text" id="userUsername" placeholder="Username">
+                      <span class="error" id="userUsernameError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="userEmail">Email:</label></td>
+                    <td>
+                      <input type="email" id="userEmail" placeholder="name@example.com">
+                      <span class="error" id="userEmailError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="userPassword">Password:</label></td>
+                    <td>
+                      <input type="text" id="userPassword" placeholder="At least 8 characters">
+                      <span class="error" id="userPasswordError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="userRole">Role:</label></td>
+                    <td>
+                      <select id="userRole">
+                        <option value="">-- Select --</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Patient">Patient</option>
+                        <option value="Receptionist">Receptionist</option>
+                      </select>
+                      <span class="error" id="userRoleError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="userStatus">Status:</label></td>
+                    <td>
+                      <select id="userStatus">
+                        <option value="Active">Active</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Blocked">Blocked</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" id="userSaveButton" class="btn" value="Add User">
+              <button type="button" class="btn btn-secondary" onclick="resetUserForm()">Cancel</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-wide">
+          <div class="card">
+            <h3>All users</h3>
+            <div class="search-bar">
+              <input type="text" id="userSearch" placeholder="Search by name, username or email..." onkeyup="renderUsers()">
+              <select id="userRoleFilter" onchange="renderUsers()">
+                <option value="All">All roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
+                <option value="Receptionist">Receptionist</option>
+              </select>
+            </div>
+            <p class="hint" id="userCount"></p>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr><th>ID</th><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="statsSection" class="page-section">
+      <h2 class="page-title">Statistics Report</h2>
+      <p class="page-subtitle">Numbers are counted from the hospital data.</p>
+
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <div class="card">
+        <h3>Users by role</h3>
+        <div id="roleBars"></div>
+      </div>
+    </section>
+
+    <section id="feesSection" class="page-section">
+      <h2 class="page-title">Hospital Fees</h2>
+      <p class="page-subtitle">Set the standard fees of the hospital.</p>
+
+      <div id="feesMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3>Change fees</h3>
+            <form id="feesForm" onsubmit="return saveFees()">
+              <fieldset>
+                <legend>Fees in Taka</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="generalFee">General doctor fee:</label></td>
+                    <td>
+                      <input type="number" id="generalFee" placeholder="e.g. 500">
+                      <span class="error" id="generalFeeError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="specialistFee">Specialist fee:</label></td>
+                    <td>
+                      <input type="number" id="specialistFee" placeholder="e.g. 1000">
+                      <span class="error" id="specialistFeeError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="bedFee">Bed fee per day:</label></td>
+                    <td>
+                      <input type="number" id="bedFee" placeholder="e.g. 1500">
+                      <span class="error" id="bedFeeError"></span>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" class="btn" value="Save Fees">
+            </form>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <h3>Current fees</h3>
+            <table class="data-table">
+              <thead>
+                <tr><th>Service</th><th>Fee</th></tr>
+              </thead>
+              <tbody id="feesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="noticeSection" class="page-section">
+      <h2 class="page-title">Notice Board</h2>
+      <p class="page-subtitle">Post notices for everyone or for one group.</p>
+
+      <div id="noticeMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3>Post a notice</h3>
+            <form id="noticeForm" onsubmit="return postNotice()">
+              <fieldset>
+                <legend>Notice Details</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="noticeTitle">Title:</label></td>
+                    <td>
+                      <input type="text" id="noticeTitle" placeholder="Notice title">
+                      <span class="error" id="noticeTitleError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="noticeFor">For:</label></td>
+                    <td>
+                      <select id="noticeFor">
+                        <option value="All">Everyone</option>
+                        <option value="Doctor">Doctors</option>
+                        <option value="Patient">Patients</option>
+                        <option value="Receptionist">Receptionists</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="noticeText">Notice:</label></td>
+                    <td>
+                      <textarea id="noticeText" rows="4" cols="30" placeholder="Write the notice"></textarea>
+                      <span class="error" id="noticeTextError"></span>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" class="btn" value="Post Notice">
+            </form>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <h3>Posted notices</h3>
+            <div id="noticeList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 LifeLine Hospital
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
