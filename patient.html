@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Patient dashboard of LifeLine Hospital">
+  <title>Patient Dashboard | LifeLine Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">Life<span>Line</span> Hospital</a>
+    <div class="user-info">
+      <span class="badge patient">Patient</span>
+      <span>Welcome, Rahim Uddin</span>
+      <a href="index.html" class="btn btn-small btn-light">Logout</a>
+    </div>
+  </header>
+
+  <nav class="topnav">
+    <button type="button" id="nav-appointmentSection" onclick="showSection('appointmentSection')">My Appointments</button>
+    <button type="button" id="nav-medicineSection" onclick="showSection('medicineSection')">Medicine Tracker</button>
+    <button type="button" id="nav-bmiSection" onclick="showSection('bmiSection')">BMI Calculator</button>
+    <button type="button" id="nav-symptomSection" onclick="showSection('symptomSection')">Symptom Checker</button>
+  </nav>
+
+  <main class="container">
+
+    <section id="appointmentSection" class="page-section">
+      <h2 class="page-title">My Appointments</h2>
+      <p class="page-subtitle">Book, change, cancel and search your appointments.</p>
+
+      <div id="aptMessage" class="message"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <h3 id="aptFormTitle">Book Appointment</h3>
+            <form id="appointmentForm" onsubmit="return saveAppointment()">
+              <fieldset>
+                <legend>Appointment Details</legend>
+                <table class="form-table">
+                  <tr>
+                    <td><label for="aptDepartment">Department:</label></td>
+                    <td>
+                      <select id="aptDepartment" onchange="fillDoctors()"></select>
+                      <span class="error" id="aptDepartmentError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="aptDoctor">Doctor:</label></td>
+                    <td>
+                      <select id="aptDoctor"></select>
+                      <span class="error" id="aptDoctorError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="aptDate">Date:</label></td>
+                    <td>
+                      <input type="date" id="aptDate">
+                      <span class="error" id="aptDateError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="aptTime">Time:</label></td>
+                    <td>
+                      <input type="time" id="aptTime">
+                      <span class="error" id="aptTimeError"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="aptProblem">Problem:</label></td>
+                    <td>
+                      <textarea id="aptProblem" rows="3" cols="30" placeholder="Describe your problem"></textarea>
+                      <span class="error" id="aptProblemError"></span>
+                    </td>
+                  </tr>
+                </table>
+              </fieldset>
+              <input type="submit" id="aptSaveButton" class="btn" value="Book Appointment">
+              <button type="button" class="btn btn-secondary" onclick="resetAppointmentForm()">Cancel</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-wide">
+          <div class="card">
+            <h3>My appointments</h3>
+            <div class="search-bar">
+              <input type="text" id="appointmentSearch" placeholder="Search by doctor, department or problem..." onkeyup="renderAppointments()">
+            </div>
+            <p class="hint" id="aptCount"></p>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr><th>ID</th><th>Doctor</th><th>Date and Time</th><th>Problem</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="appointmentBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="medicineSection" class="page-section">
+      <h2 class="page-title">Medicine Tracker</h2>
+      <p class="page-subtitle">Tick each medicine after you take it today.</p>
+
+      <div class="card">
+        <h3>Today's medicines</h3>
+        <div class="check-list">
+          <label><input type="checkbox" id="med1" onchange="updateMedicine()"> Paracetamol 500mg (Morning)</label>
+          <label><input type="checkbox" id="med2" onchange="updateMedicine()"> Amlodipine 5mg (Noon)</label>
+          <label><input type="checkbox" id="med3" onchange="updateMedicine()"> Omeprazole 20mg (Night)</label>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="medicineBar"></div></div>
+        <p id="medicineText"></p>
+      </div>
+    </section>
+
+    <section id="bmiSection" class="page-section">
+      <h2 class="page-title">BMI Calculator</h2>
+      <p class="page-subtitle">Check your body mass index.</p>
+
+      <div class="card">
+        <form id="bmiForm" onsubmit="return calculateBmi()">
+          <fieldset>
+            <legend>Your measurements</legend>
+            <table class="form-table">
+              <tr>
+                <td><label for="weight">Weight (kg):</label></td>
+                <td>
+                  <input type="number" id="weight" placeholder="e.g. 65">
+                  <span class="error" id="weightError"></span>
+                </td>
+              </tr>
+              <tr>
+                <td><label for="height">Height (cm):</label></td>
+                <td>
+                  <input type="number" id="height" placeholder="e.g. 170">
+                  <span class="error" id="heightError"></span>
+                </td>
+              </tr>
+            </table>
+          </fieldset>
+          <input type="submit" class="btn" value="Calculate BMI">
+        </form>
+        <p id="bmiResult" class="result-box"></p>
+      </div>
+    </section>
+
+    <section id="symptomSection" class="page-section">
+      <h2 class="page-title">Symptom Checker</h2>
+      <p class="page-subtitle">Tick your symptoms and we will suggest a department. This is not a diagnosis.</p>
+
+      <div class="card">
+        <form id="symptomForm" onsubmit="return checkSymptoms()">
+          <fieldset>
+            <legend>Your symptoms</legend>
+            <div class="check-list">
+              <label><input type="checkbox" id="fever" name="symptom" value="fever"> Fever</label>
+              <label><input type="checkbox" id="chestPain" name="symptom" value="chestPain"> Chest pain</label>
+              <label><input type="checkbox" id="jointPain" name="symptom" value="jointPain"> Joint pain</label>
+              <label><input type="checkbox" id="childFever" name="symptom" value="childFever"> Fever in a child</label>
+            </div>
+            <span class="error" id="symptomError"></span>
+          </fieldset>
+          <input type="submit" class="btn" value="Suggest Department">
+        </form>
+        <p id="symptomResult" class="result-box"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 LifeLine Hospital
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/patient.js"></script>
+</body>
+</html>

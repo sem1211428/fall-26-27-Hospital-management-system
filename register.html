@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create an account at LifeLine Hospital">
+  <title>Register | LifeLine Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">Life<span>Line</span> Hospital</a>
+    <div class="user-info">
+      <a href="login.html" class="btn btn-small btn-light">Login</a>
+      <a href="register.html" class="btn btn-small">Register</a>
+    </div>
+  </header>
+
+  <nav class="topnav">
+    <a href="index.html">Home</a>
+    <a href="index.html#search">Find a Doctor</a>
+    <a href="index.html#departments">Departments</a>
+    <a href="index.html#contact">Contact Us</a>
+  </nav>
+
+  <main class="container">
+    <div class="auth-box wide">
+      <div class="card">
+        <h2 class="page-title">Create an account</h2>
+        <p class="page-subtitle">Choose your account type first. Doctors and receptionists need admin approval.</p>
+
+        <div id="registerMessage" class="message"></div>
+
+        <form id="registerForm" action="login.html" method="get" onsubmit="return validateRegister()">
+
+          <fieldset class="type-options">
+            <legend>Step 1: I am a</legend>
+            <input type="radio" id="typePatient" name="userType" value="Patient" onchange="showTypeFields()">
+            <label for="typePatient" class="option-label">Patient</label>
+            <input type="radio" id="typeDoctor" name="userType" value="Doctor" onchange="showTypeFields()">
+            <label for="typeDoctor" class="option-label">Doctor</label>
+            <input type="radio" id="typeReceptionist" name="userType" value="Receptionist" onchange="showTypeFields()">
+            <label for="typeReceptionist" class="option-label">Receptionist</label>
+            <span class="error" id="userTypeError"></span>
+          </fieldset>
+
+          <div id="formBody">
+
+            <fieldset>
+              <legend>Step 2: Personal details</legend>
+              <table class="form-table">
+                <tr>
+                  <td><label for="fullName">Full name:</label></td>
+                  <td>
+                    <input type="text" id="fullName" placeholder="Your full name">
+                    <span class="error" id="fullNameError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="email">Email:</label></td>
+                  <td>
+                    <input type="email" id="email" placeholder="you@example.com">
+                    <span class="error" id="emailError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="phone">Phone:</label></td>
+                  <td>
+                    <input type="text" id="phone" placeholder="01XXXXXXXXX" maxlength="11">
+                    <span class="error" id="phoneError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Gender:</td>
+                  <td>
+                    <input type="radio" id="genderMale" name="gender" value="Male">
+                    <label for="genderMale" class="option-label">Male</label>
+                    <input type="radio" id="genderFemale" name="gender" value="Female">
+                    <label for="genderFemale" class="option-label">Female</label>
+                    <span class="error" id="genderError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="dob">Date of birth:</label></td>
+                  <td>
+                    <input type="date" id="dob">
+                    <span class="error" id="dobError"></span>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+
+            <fieldset id="patientFields" class="type-fields">
+              <legend>Patient details</legend>
+              <table class="form-table">
+                <tr>
+                  <td><label for="bloodGroup">Blood group:</label></td>
+                  <td>
+                    <select id="bloodGroup">
+                      <option value="">-- Select --</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </select>
+                    <span class="error" id="bloodGroupError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="address">Address:</label></td>
+                  <td>
+                    <textarea id="address" rows="3" cols="30" placeholder="Your address"></textarea>
+                    <span class="error" id="addressError"></span>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+
+            <fieldset id="doctorFields" class="type-fields">
+              <legend>Doctor details</legend>
+              <table class="form-table">
+                <tr>
+                  <td><label for="department">Department:</label></td>
+                  <td>
+                    <select id="department">
+                      <option value="">-- Select --</option>
+                      <option value="Cardiology">Cardiology</option>
+                      <option value="Medicine">Medicine</option>
+                      <option value="Gynecology">Gynecology</option>
+                      <option value="Pediatrics">Pediatrics</option>
+                      <option value="Orthopedics">Orthopedics</option>
+                    </select>
+                    <span class="error" id="departmentError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="bmdcNo">BMDC number:</label></td>
+                  <td>
+                    <input type="text" id="bmdcNo" placeholder="A-12345">
+                    <span class="error" id="bmdcNoError"></span>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+
+            <fieldset id="receptionistFields" class="type-fields">
+              <legend>Receptionist details</legend>
+              <table class="form-table">
+                <tr>
+                  <td><label for="employeeId">Employee ID:</label></td>
+                  <td>
+                    <input type="text" id="employeeId" placeholder="EMP-1234">
+                    <span class="error" id="employeeIdError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Preferred shift:</td>
+                  <td>
+                    <input type="radio" id="shiftMorning" name="shift" value="Morning">
+                    <label for="shiftMorning" class="option-label">Morning</label>
+                    <input type="radio" id="shiftEvening" name="shift" value="Evening">
+                    <label for="shiftEvening" class="option-label">Evening</label>
+                    <span class="error" id="shiftError"></span>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+
+            <fieldset>
+              <legend>Step 3: Login information</legend>
+              <table class="form-table">
+                <tr>
+                  <td><label for="newUsername">Username:</label></td>
+                  <td>
+                    <input type="text" id="newUsername" placeholder="Choose a username">
+                    <span class="error" id="newUsernameError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="newPassword">Password:</label></td>
+                  <td>
+                    <input type="password" id="newPassword" placeholder="At least 8 characters">
+                    <span class="error" id="newPasswordError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label for="confirmPassword">Confirm password:</label></td>
+                  <td>
+                    <input type="password" id="confirmPassword" placeholder="Type the password again">
+                    <span class="error" id="confirmPasswordError"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <input type="checkbox" id="terms">
+                    <label for="terms" class="option-label">I agree to the hospital terms and conditions</label>
+                    <span class="error" id="termsError"></span>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+
+            <input type="submit" id="registerButton" class="btn btn-block" value="Create Account">
+          </div>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="login.html">Login here</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 LifeLine Hospital
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>
